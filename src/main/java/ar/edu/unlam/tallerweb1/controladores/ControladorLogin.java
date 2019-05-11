@@ -1,12 +1,8 @@
 package ar.edu.unlam.tallerweb1.controladores;
 import java.util.ArrayList;
 import java.util.List;
-
-
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -17,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-
+import ar.edu.unlam.tallerweb1.modelo.Persona;
 import ar.edu.unlam.tallerweb1.modelo.Usuario;
 import ar.edu.unlam.tallerweb1.servicios.ServicioLogin;
 
@@ -29,6 +25,8 @@ public class ControladorLogin {
 	// @Service o @Repository y debe estar en un paquete de los indicados en applicationContext.xml
 	@Inject
 	private ServicioLogin servicioLogin;
+	private List <Persona> misdatos = new ArrayList <Persona>();
+	
 
 	// Este metodo escucha la URL localhost:8080/NOMBRE_APP/login si la misma es invocada por metodo http GET
 	@RequestMapping("/login")
@@ -97,7 +95,8 @@ public class ControladorLogin {
 		return new ModelAndView ("saludo",model);
 	}*/
 	@RequestMapping("/saludo/{nombrePersona}/{apellidoPersona}")
-	public ModelAndView holi2(@PathVariable("nombrePersona") String firstName, @PathVariable("apellidoPersona") String apellido)
+	public ModelAndView holi2(@PathVariable("nombrePersona") String firstName, 
+							  @PathVariable("apellidoPersona") String apellido)
 	{
 		ModelMap model = new ModelMap();
 		return new ModelAndView("saludo",model);
@@ -114,4 +113,29 @@ public class ControladorLogin {
 			return new ModelAndView("repeticion",model);
 	}
 	
+	@RequestMapping ("/form")
+	public ModelAndView mostrarFormulario () {
+		ModelMap modelo = new ModelMap ();
+		return new ModelAndView ("Formulario",modelo);
+	}
+	
+	@RequestMapping(value ="/GuardarDatos")
+	public ModelAndView datosFormulario (
+										@ModelAttribute("Persona") Persona mip,
+										HttpServletRequest request) {
+		
+		ModelMap modelo = new ModelMap();
+		misdatos.add(mip);
+		return new ModelAndView ("Formulario",modelo);
+	}
+	
+	
+	@RequestMapping ("/Mostrar")
+	public ModelAndView mostrar() {
+		
+		ModelMap modelo = new ModelMap();
+		modelo.put("Coleccion", misdatos);
+		
+		return new ModelAndView ("Mostrar",modelo);
+	}
 }
